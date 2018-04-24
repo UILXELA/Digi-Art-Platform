@@ -27,6 +27,7 @@ contract ArtBase{
         _;
     }
 
+
     modifier notOwner {
         require(msg.sender != owner);
         _;
@@ -36,37 +37,39 @@ contract ArtBase{
         selfdestruct(owner);
     }
 
-    function initiateSale(uint _price, address _to) public onlyOwner {
+
+    function initiateSale(uint _price, address _to) onlyOwner public {
         require(_to != address(this) && _to != owner);
-        require(state == artBaseStates.hold);
+        require(!selling);
 
-        state = artBaseStates.selling;
+        selling = true;
 
-        targetBuyer = _to;
+        sellingTo = _to;
 
-        currentPrice = _price;
+        askingPrice = _price;
       }
 
-    function initiateAuction(uint _price) public onlyOwner {
+    function initiateAuction(uint _price) onlyOwner public {
         require(_to != address(this) && _to != owner);
-        require(state == artBaseStates.hold);
+        require(!selling);
 
-        state = artBaseStates.auctioning;
+        selling = true;
 
-        currentPrice = _price;
+        startPrice = _price;
     }
 
-    function resetSale() private {
-        state = artBaseStates.hold;
-        targetBuyer = address(0);
+    function resetSale() onlyOwner public {
+        selling = false;
     }
 
-    function cancelDeal() public onlyOwner{
-        require(state != artBaseStates.hold);
+    function cancelSale() onlyOwner public {
+        require(selling);
+
 
       // Reset sale variables
         resetSale();
     }
+
 
     function buy() public notOwner payable {
         require(selling);
@@ -79,6 +82,7 @@ contract ArtBase{
         address newOwner = msg.sender;
         uint salePrice = currentPrice;
 
+
         owner = newOwner;
 
         // Transaction cleanup
@@ -86,11 +90,13 @@ contract ArtBase{
 
         prevOwner.transfer(salePrice);
 
+
         emit Transfer( "buy", now, prevOwner, newOwner, salePrice);
       }
 
 }
 
 contract Painting is ArtBase {
+
   //to be constructed
 }
