@@ -147,7 +147,7 @@ contract DigiArtPlat{
         prevWinning.transfer(arts[ID].currentBid);
         address prevWinning = arts[ID].winning;
         arts[ID].winning = msg.sender;
-        arts[ID].currentBid = msg.value;
+        arts[ID].currentBid = msg.value/1000000000000000;
 
     }
 
