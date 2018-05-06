@@ -30,6 +30,7 @@ contract DigiArtPlat{
     mapping (address=>uint) score;
     mapping (address=>uint) ratingCount;
     mapping (address=>uint) rating;
+    mapping (uint=>address) toOwner;
 
     event Transfer(string txType, uint time, address from, address to, uint price);
     event Creation(uint time, address artist);
@@ -60,6 +61,7 @@ contract DigiArtPlat{
             auctionDuration: 0,
             state: ArtStates.hold
             });
+        toOwner[artID] = msg.sender;
         artID = artID+1;
         return artID - 1;
     }
@@ -117,8 +119,9 @@ contract DigiArtPlat{
         // Transaction cleanup
         resetSale(ID);
 
-        prevOwner.transfer(salePrice);
+        prevOwner.transfer(salePrice* 1 finney);
         arts[ID].owner = newOwner;
+        toOwner[artID] = newOwner;
         emit Transfer("buy", now, prevOwner, newOwner, salePrice);
 
         score[msg.sender] +=500;
@@ -137,7 +140,7 @@ contract DigiArtPlat{
         arts[ID].users.push(msg.sender);
         uint index = arts[ID].users.length-1;
         arts[ID].userIndex[msg.sender] = index;
-        arts[ID].owner.transfer(arts[ID].currentRent);
+        arts[ID].owner.transfer(arts[ID].currentRent* 1 finney);
         arts[ID].rentStart[msg.sender] = now + start * 1 days;
         arts[ID].rentDuration[msg.sender] = duration;
         arts[ID].destination[msg.sender] = destination;
@@ -161,8 +164,8 @@ contract DigiArtPlat{
         require(now<=arts[ID].auctionStart+arts[ID].auctionDuration * 1 hours);
         require(arts[ID].state == ArtStates.auctioning);
         require(msg.value>arts[ID].currentBid*1 finney);
-        prevWinning.transfer(arts[ID].currentBid);
-        address prevWinning = arts[ID].winning;
+        arts[ID].winning.transfer(arts[ID].currentBid* 1 finney);
+        //address prevWinning = arts[ID].winning;
         arts[ID].winning = msg.sender;
         arts[ID].currentBid = msg.value/1000000000000000;
 
@@ -181,8 +184,9 @@ contract DigiArtPlat{
             address prevOwner = arts[ID].owner;
             uint _price = arts[ID].currentBid;
             address winner = arts[ID].winning;
-            prevOwner.transfer(_price);
+            prevOwner.transfer(_price* 1 finney);
             arts[ID].owner = winner;
+            toOwner[artID] = winner;
             emit Transfer("auction", now, prevOwner, winner, _price);
             require(rate<=500);
             score[msg.sender] += rate;
