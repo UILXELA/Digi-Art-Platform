@@ -64,6 +64,7 @@ App = {
 
       return adoptionInstance.getAdopters.call();
     }).then(function(adopters) {
+      console.log(adopters);
       for (i = 0; i < adopters.length; i++) {
         if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
           $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true);
@@ -92,8 +93,10 @@ App = {
         adoptionInstance = instance;
 
         // Execute adopt as a transaction by sending account
-        return adoptionInstance.adopt(petId, {from: account});
+        return adoptionInstance.adopt.call(petId, {from: account});
       }).then(function(result) {
+        console.log(result);
+        console.log(result.c[0]);
         return App.markAdopted();
       }).catch(function(err) {
         console.log(err.message);

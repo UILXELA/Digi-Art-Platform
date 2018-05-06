@@ -63,17 +63,12 @@ App = {
 
   bindEvents: function() {
     $(document).on('click', '.btn-buy', App.handleBuy);
-    $(document).on('click', '.btn-rent', App.handleBuy);
-    $(document).on('click', '.btn-bid', App.handleBuy);
-    $(document).on('submit', '#my-form', App.uploadArt);
-    $(document).on('click', '.upload', App.showUpload);
-  },
-
-  showUpload: function() {
-    if ($("#my-form-div").css("display") == "none")
-      $("#my-form-div").css("display","block");
-    else
-      $("#my-form-div").css("display","none");
+    $(document).on('click', '.btn-rent', App.handleRent);
+    $(document).on('click', '.btn-bid', App.handleAuc);
+    $(document).on('submit', '#my-form', App.createArtwork);
+    $(document).on('click', '.btn-ibuy', App.initBuy);
+    $(document).on('click', '.btn-irent', App.initRent);
+    $(document).on('click', '.btn-ibid', App.initAuc);
   },
 
   markSuccess: function(adopters, account) {
@@ -178,10 +173,12 @@ App = {
     });
   },
 
-  uploadArt: function(event) {
+  createArtwork: function(event) {
 
     event.preventDefault();
 
+    var artRow = $('#artRow');
+    var artTemplate = $('#artTemplate');
 
     var name = document.forms["my-form"]["name"].value;
     var author = document.forms["my-form"]["author"].value;
@@ -191,29 +188,95 @@ App = {
     var mode = document.forms["my-form"]["mode"].value;
     var address = document.forms["my-form"]["address"].value;
     var price = document.forms["my-form"]["price"].value;
-    
+  
 
     var newArtId = App.dataLen + 1;
 
-    
+
+    artTemplate.find('.panel-title').text(name);
+    artTemplate.find('img').attr('src', thumbnail);
+    artTemplate.find('.author').text(author);
+    artTemplate.find('.year').text(year);
+    artTemplate.find('.price').text(price);
+    artTemplate.find('.btn-buy').attr('data-id', newArtId);
+    artTemplate.find('.btn-rent').attr('data-id', newArtId);
+    artTemplate.find('.btn-bid').attr('data-id', newArtId);
+
+
     App.contracts.DigiArtPlat.deployed().then(function(instance) {
       platInstance = instance;
 // ******************************************
-      if (mode == "Buy") {
-        if (address !== "")
-          return platInstance.initiateSale(newArtId, price, address);
-        else
-          return platInstance.initiateSale(newArtId, price, "0x0000000000000000000000000000000000000000");
-      }
-      else if (mode=="Rent") {
-        if (address !== "")
-          return platInstance.initialRent(newArtId, price, address);
-        else
-          return platInstance.initialRent(newArtId, price, "0x0000000000000000000000000000000000000000");
-      }
-      else {
-        return platInstance.initiateAuction(newArtId, price, address);
-      }
+      return platInstance.createArt();
+      
+      // ******************************************
+    }).then(function(result) {
+      console.log("Art Created");
+      artRow.append(artTemplate.html());
+    }).catch(function(err) {
+      console.log(err.message);
+    });
+    
+  },
+
+
+  initBuy: function(event) {
+
+    event.preventDefault();
+    var address = "0x0000000000000000000000000000000000000000";
+    var newArtId = 0;
+    var price = 40;
+
+    App.contracts.DigiArtPlat.deployed().then(function(instance) {
+      platInstance = instance;
+// ******************************************
+      if (address !== "")
+        return platInstance.initiateSale(newArtId, price, address);
+      else
+        return platInstance.initiateSale(newArtId, price, "0x0000000000000000000000000000000000000000");
+      // ******************************************
+    }).then(function(result) {
+      alert("Upload Successful!");
+    }).catch(function(err) {
+      console.log(err.message);
+    });
+  },
+
+
+  initRent: function(event) {
+
+    event.preventDefault();
+    var address = "0x0000000000000000000000000000000000000000";
+
+    var newArtId = 0;
+
+    App.contracts.DigiArtPlat.deployed().then(function(instance) {
+      platInstance = instance;
+// ******************************************
+      if (address !== "")
+        return platInstance.initialRent(newArtId, price, address);
+      else
+        return platInstance.initialRent(newArtId, price, "0x0000000000000000000000000000000000000000");
+      // ******************************************
+    }).then(function(result) {
+      alert("Upload Successful!");
+    }).catch(function(err) {
+      console.log(err.message);
+    });
+  },
+
+  initAuc: function(event) {
+
+    event.preventDefault();
+
+    var address = "0x0000000000000000000000000000000000000000";
+    var newArtId = 0;
+
+
+    App.contracts.DigiArtPlat.deployed().then(function(instance) {
+      platInstance = instance;
+// ******************************************
+      return platInstance.initiateAuction(newArtId, price, address);
+      
       // ******************************************
     }).then(function(result) {
       alert("Upload Successful!");
@@ -222,19 +285,6 @@ App = {
     });
     
 
-    var artRow = $('#artRow');
-    var artTemplate = $('#artTemplate');
-    artTemplate.find('.panel-title').text(name);
-    artTemplate.find('img').attr('src', thumbnail);
-    artTemplate.find('.author').text(author);
-    artTemplate.find('.year').text(year);
-    artTemplate.find('.price').text('500');
-    artTemplate.find('.btn-buy').attr('data-id', newArtId);
-    artTemplate.find('.btn-rent').attr('data-id', newArtId);
-    artTemplate.find('.btn-bid').attr('data-id', newArtId);
-
-    artRow.append(artTemplate.html());
-    App.showUpload();
   }
 
 };
