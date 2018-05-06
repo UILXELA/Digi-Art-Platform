@@ -2,9 +2,10 @@ pragma solidity ^0.4.2;
 
 //Art class for artwork
 contract DigiArtPlat{
-    function DigiArtPlat() public{
-    }
+    // function DigiArtPlat() public{
+    // }
 
+    address[16] public user;
 
     enum ArtStates { hold, selling, auctioning, renting}
     struct Art{
@@ -51,7 +52,8 @@ contract DigiArtPlat{
             targetBuyer: address(0),
             targetRenter: address(0),
             currentPrice: 0,
-            currentRent: 0,       //rent per day
+            currentRent: 0,
+            //rent per day
             currentBid: 0,
             winning: address(0),
             auctionStart: 0,
@@ -62,7 +64,8 @@ contract DigiArtPlat{
         return artID - 1;
     }
 
-    function initiateSale(uint ID, uint _price, address _to) public onlyOwner(arts[ID]) {   //artist can either set a target buyer or not(open sale)
+    function initiateSale(uint ID, uint _price, address _to) public onlyOwner(arts[ID]) {
+        //artist can either set a target buyer or not(open sale)
         require(_to != address(this) && _to != arts[ID].owner);
         require(arts[ID].state == ArtStates.hold);
 
@@ -71,7 +74,7 @@ contract DigiArtPlat{
         arts[ID].targetBuyer = _to;
 
         arts[ID].currentPrice = _price;
-      }
+    }
 
     function initialRent(uint ID, uint _rent, address _to) public onlyOwner(arts[ID]){
         require(_to != address(this) && _to != arts[ID].owner);
@@ -104,7 +107,7 @@ contract DigiArtPlat{
         require(arts[ID].state == ArtStates.selling);
         require(msg.sender != arts[ID].owner);
         require(msg.sender == arts[ID].targetBuyer || arts[ID].targetBuyer == address(0));
-        require(msg.value == arts[ID].currentPrice* 1 finney);
+        require(msg.value == arts[ID].currentPrice * 1 finney);
 
         // Change ownership
         address prevOwner = arts[ID].owner;
@@ -116,7 +119,7 @@ contract DigiArtPlat{
 
         prevOwner.transfer(salePrice);
         arts[ID].owner = newOwner;
-        emit Transfer( "buy", now, prevOwner, newOwner, salePrice);
+        emit Transfer("buy", now, prevOwner, newOwner, salePrice);
 
         score[msg.sender] +=500;
         ratingCount[msg.sender] +=1;
@@ -124,7 +127,8 @@ contract DigiArtPlat{
 
     }
 
-    function rent(uint ID, uint start, uint duration, string destination)public notOwner(arts[ID]) payable returns(uint){          //to subscribe, need to call this function
+    function rent(uint ID, uint start, uint duration, string destination)public notOwner(arts[ID]) payable returns(uint){
+        //to subscribe, need to call this function
         require(arts[ID].state == ArtStates.renting);
         require(msg.sender == arts[ID].targetRenter);
         require(msg.value == arts[ID].currentRent * 1 finney);
@@ -137,7 +141,7 @@ contract DigiArtPlat{
         arts[ID].rentStart[msg.sender] = now + start * 1 days;
         arts[ID].rentDuration[msg.sender] = duration;
         arts[ID].destination[msg.sender] = destination;
-        emit Transfer( "rent", now, arts[ID].owner, msg.sender, rentPrice);
+        emit Transfer("rent", now, arts[ID].owner, msg.sender, rentPrice);
         return index;
     }
 
@@ -179,10 +183,10 @@ contract DigiArtPlat{
             address winner = arts[ID].winning;
             prevOwner.transfer(_price);
             arts[ID].owner = winner;
-            emit Transfer( "auction", now, prevOwner, winner, _price);
+            emit Transfer("auction", now, prevOwner, winner, _price);
             require(rate<=500);
-            score[msg.sender] +=rate;
-            ratingCount[msg.sender] +=1;
+            score[msg.sender] += rate;
+            ratingCount[msg.sender] += 1;
             rating[msg.sender] = score[msg.sender]/ratingCount[msg.sender];
         }
 
@@ -195,5 +199,10 @@ contract DigiArtPlat{
     //function subscribe(uint ID,) public notOwner(arts[ID]){
 
     //}
+
+    function getUser() public view returns (address[16]) {
+        return user;
+    }
+
 
 }
