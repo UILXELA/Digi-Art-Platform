@@ -49,10 +49,11 @@ contract DigiArtPlat{
         _;
     }
 
-    function createArt(uint Id) public returns(uint){
+    function createArt(uint Id, uint _price) public returns(uint){
 
         require(Id >= 0 && Id <= 9);
 
+        prices[Id] = _price;
         userDat[Id] = msg.sender;
 
         arts[artID] = Art({
@@ -95,7 +96,12 @@ contract DigiArtPlat{
         // arts[ID].currentPrice = _price;
     }
 
-    function initialRent(uint ID, uint _rent, address _to) public onlyOwner(arts[ID]){
+    function initialRent(uint ID, uint _rent /*, address _to*/) public onlyOwner(arts[ID]){
+                
+        require(ID >= 0 && ID <= 9);
+
+        prices[ID] = _rent;
+        status1[ID][1] = 1;
         // require(_to != address(this) && _to != arts[ID].owner);
         // require(arts[ID].state == ArtStates.hold);
 
@@ -122,55 +128,69 @@ contract DigiArtPlat{
         arts[ID].targetBuyer = address(0);
     }
 
-    function buy(uint ID) public notOwner(arts[ID]) payable {
-        require(arts[ID].state == ArtStates.selling);
-        require(msg.sender != arts[ID].owner);
-        require(msg.sender == arts[ID].targetBuyer || arts[ID].targetBuyer == address(0));
-        require(msg.value == arts[ID].currentPrice * 1 finney);
+    function buy(uint ID) public returns(uint) /*notOwner(arts[ID]) payable */{
 
         require(ID >= 0 && ID <= 9);
 
         buyerDat[ID] = msg.sender;
 
-        // Change ownership
-        address prevOwner = arts[ID].owner;
-        address newOwner = msg.sender;
-        uint salePrice = arts[ID].currentPrice;
+        return ID;
 
-        // Transaction cleanup
-        resetSale(ID);
+        // require(arts[ID].state == ArtStates.selling);
+        // require(msg.sender != arts[ID].owner);
+        // require(msg.sender == arts[ID].targetBuyer || arts[ID].targetBuyer == address(0));
+        // require(msg.value == arts[ID].currentPrice * 1 finney);
 
-        prevOwner.transfer(salePrice* 1 finney);
-        arts[ID].owner = newOwner;
-        toOwner[artID] = newOwner;
-        emit Transfer("buy", now, prevOwner, newOwner, salePrice);
+        // require(ID >= 0 && ID <= 9);
 
-        score[msg.sender] += 500;
-        ratingCount[msg.sender] += 1;
-        rating[msg.sender] = score[msg.sender]/ratingCount[msg.sender];
+        // buyerDat[ID] = msg.sender;
+
+        // // Change ownership
+        // address prevOwner = arts[ID].owner;
+        // address newOwner = msg.sender;
+        // uint salePrice = arts[ID].currentPrice;
+
+        // // Transaction cleanup
+        // resetSale(ID);
+
+        // prevOwner.transfer(salePrice* 1 finney);
+        // arts[ID].owner = newOwner;
+        // toOwner[artID] = newOwner;
+        // emit Transfer("buy", now, prevOwner, newOwner, salePrice);
+
+        // score[msg.sender] += 500;
+        // ratingCount[msg.sender] += 1;
+        // rating[msg.sender] = score[msg.sender]/ratingCount[msg.sender];
 
     }
 
-    function rent(uint ID, uint start, uint duration, string destination)public notOwner(arts[ID]) payable returns(uint){
-        //to subscribe, need to call this function
-        require(arts[ID].state == ArtStates.renting);
-        require(msg.sender == arts[ID].targetRenter);
-        require(msg.value == arts[ID].currentRent * 1 finney);
+    function rent(uint ID, uint start, /*uint duration,*/ string destination)public /*notOwner(arts[ID]) payable*/ returns(uint){
 
+        
         require(ID >= 0 && ID <= 9);
 
         buyerDat[ID] = msg.sender;
 
-        uint rentPrice = arts[ID].currentRent;
-        arts[ID].users.push(msg.sender);
-        uint index = arts[ID].users.length-1;
-        arts[ID].userIndex[msg.sender] = index;
-        arts[ID].owner.transfer(arts[ID].currentRent* 1 finney);
-        arts[ID].rentStart[msg.sender] = now + start * 1 days;
-        arts[ID].rentDuration[msg.sender] = duration;
-        arts[ID].destination[msg.sender] = destination;
-        emit Transfer("rent", now, arts[ID].owner, msg.sender, rentPrice);
-        return index;
+        return ID;
+        //to subscribe, need to call this function
+        // require(arts[ID].state == ArtStates.renting);
+        // require(msg.sender == arts[ID].targetRenter);
+        // require(msg.value == arts[ID].currentRent * 1 finney);
+
+        // require(ID >= 0 && ID <= 9);
+
+        // buyerDat[ID] = msg.sender;
+
+        // uint rentPrice = arts[ID].currentRent;
+        // arts[ID].users.push(msg.sender);
+        // uint index = arts[ID].users.length-1;
+        // arts[ID].userIndex[msg.sender] = index;
+        // arts[ID].owner.transfer(arts[ID].currentRent* 1 finney);
+        // arts[ID].rentStart[msg.sender] = now + start * 1 days;
+        // arts[ID].rentDuration[msg.sender] = duration;
+        // arts[ID].destination[msg.sender] = destination;
+        // emit Transfer("rent", now, arts[ID].owner, msg.sender, rentPrice);
+        // return index;
     }
 
     function endRent(uint ID, address _renter,uint rate) public onlyOwner(arts[ID]){
@@ -240,6 +260,14 @@ contract DigiArtPlat{
 
     function getBuyer() public view returns (address[9]) {
         return buyerDat;
+    }
+
+    function getStatus() public view returns (uint[9][3]) {
+        return status1;
+    }
+
+    function getPrice() public view returns (uint[9]) {
+        return prices;
     }
 
 

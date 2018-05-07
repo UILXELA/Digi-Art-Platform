@@ -1,0 +1,30 @@
+body {
+    background-color: lightseagreen;
+}
+
+.btn {
+    margin: 20px 0;
+}
+
+.title {
+    font-family: 'Lobster', cursive;
+    font-size: 80px;
+    color: black;
+}
+
+#hint {
+    text-align: center;
+    font-size: 60px;
+    color: wheat;
+    opacity: 0.5;
+    font-weight: 700;
+    border-radius: 20px;
+    width: 300px;
+    height: 350px;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}

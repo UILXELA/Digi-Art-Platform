@@ -9,6 +9,8 @@
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -21,13 +23,12 @@
     <div class="container">
       <div class="row">
         <div class="col-xs-12 col-sm-8 col-sm-push-2">
-          <h1 class="text-center">User Page</h1>
-          <hr/>
+          <h1 class="text-center title">:User Page</h1>
           <br/>
         </div>
       </div>
 
-      <a href="./"><button class="btn btn-default" type="button" data-page="user">Back</button></a>
+      <a href="./"><button class="btn btn-warning" type="button" data-page="user">Back</button></a>
 
       <div id="artRow" class="row">
       </div>
@@ -47,12 +48,15 @@
             <form class="form-inline">
                 <label class="mr-sm-2" for="priceInput">Price</label>
                 <input type="number" class="form-control mb-2 mr-sm-2 mb-sm-0 price" id="priceInput" data-id="0" placeholder="20">
-            </form>              
+            </form> 
+            <button class="btn btn-default btn-buy" type="button" data-id="0" style="display: none;">Buy</button>
+            <button class="btn btn-default btn-rent" type="button" data-id="0" style="display: none;">Rent</button>
+            <button class="btn btn-default btn-bid" type="button" data-id="0" style="display: none;">Bid</button>
             <button class="btn btn-primary btn-ica" type="button" data-id="0" style="display: block;">Put on Market</button>
             <button class="btn btn-default btn-ibuy" type="button" data-id="0" style="display: none;">Activate Buy</button>
             <button class="btn btn-default btn-cbuy" type="button" data-id="0" style="display: none;" disabled="true">Activated</button>
             <button class="btn btn-default btn-irent" type="button" data-id="0" style="display: none;">Activate Rent</button>
-            <button class="btn btn-default btn-crent" type="button" data-id="0" style="display: none;">End Rent</button>
+            <button class="btn btn-default btn-crent" type="button" data-id="0" style="display: none;" disabled="true">Activated</button>
             <button class="btn btn-default btn-ibid" type="button" data-id="0" style="display: none;">Activate Bid</button>
             <button class="btn btn-default btn-cbid" type="button" data-id="0" style="display: none;">Close Bid</button>
           </div>

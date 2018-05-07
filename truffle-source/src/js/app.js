@@ -41,9 +41,10 @@ App = {
       App.contracts.DigiArtPlat.deployed().then(function(instance) {
         platInstance = instance;
   
-        return platInstance.getUser.call();
+        return platInstance.getPrice.call();
       }).then(function(user) {
         users1 = user;
+        
         $.getJSON('../artworks.json', function(data) {
           var artRow = $('#artRow');
           var artTemplate = $('#artTemplate');
@@ -52,12 +53,13 @@ App = {
           App.dataLen = data.length;
           if ($("[data-page='home']").length!=0) {
             for (i = 0; i < data.length; i ++) {
-              if (users1[i]!="0x0000000000000000000000000000000000000000") {
+              console.log(users1);
+              if (users1[i]!=0) {
                 artTemplate.find('.panel-title').text(data[i].name);
                 artTemplate.find('img').attr('src', data[i].picture);
                 artTemplate.find('.author').text(data[i].author);
                 artTemplate.find('.year').text(data[i].year);
-                artTemplate.find('.price').attr('data-id', data[i].id).attr('placeholder', data[i].price);
+                artTemplate.find('.price').text(users1[i].c);
                 artTemplate.find('.btn-buy').attr('data-id', data[i].id);
                 artTemplate.find('.btn-rent').attr('data-id', data[i].id);
                 artTemplate.find('.btn-bid').attr('data-id', data[i].id);
@@ -69,6 +71,8 @@ App = {
                 artTemplate.find('.btn-crent').attr('data-id', data[i].id);
                 artTemplate.find('.btn-cbid').attr('data-id', data[i].id);
                 artTemplate.find('.btn-cbuy').attr('data-id', data[i].id);
+                artTemplate.find('.form-group').attr('data-id', data[i].id);
+                artTemplate.find('.btn-rentconf').attr('data-id', data[i].id);
               }
               else
                 continue;
@@ -95,11 +99,19 @@ App = {
               artTemplate.find('.btn-crent').attr('data-id', data[j].id);
               artTemplate.find('.btn-cbid').attr('data-id', data[j].id);
               artTemplate.find('.btn-cbuy').attr('data-id', data[j].id);
+              artTemplate.find('.form-group').attr('data-id', data[j].id);
+              artTemplate.find('.btn-rentconf').attr('data-id', data[j].id);
+    
     
               artRow.append(artTemplate.html());
             }
           }
-
+          if ($('.author').length <= 1) {
+            console.log("no item");
+            $("#hint").show();
+          }
+          else
+            $("#hint").hide();
 
           return App.markSuccess();
         });
@@ -111,8 +123,6 @@ App = {
 
       
 
-
-      
     });
 
 
@@ -131,6 +141,7 @@ App = {
     $(document).on('click', '.btn-ibid', App.initAuc);
     $(document).on('click', '.btn-crent', App.clRent);
     $(document).on('click', '.btn-cbid', App.clAuc);
+    $(document).on('click', '.btn-rentconf', App.handleRent2);
 
   },
 
@@ -139,32 +150,21 @@ App = {
     event.preventDefault();
     var platInstance;
 
-    // App.contracts.DigiArtPlat.deployed().then(function(instance) {
-    //   platInstance = instance;
-
-    //   return platInstance.getBuyer.call();
-    // }).then(function(user) {
-    //   for (i = 0; i < user.length; i++) {
-    //     if (user[i] !== "0x0000000000000000000000000000000000000000") {
-    //       console.log(i + 'success');
-    //       $('.panel-art').eq(i).find('.btn-buy').text('Success').attr('disabled', true);
-    //       $('.panel-art').eq(i).find('.btn-rent').text('Success').css('display', "none");
-    //       $('.panel-art').eq(i).find('.btn-bid').text('Success').css('display', "none");
-    //     }
-    //   }
-    // }).catch(function(err) {
-    //   console.log(err.message);
-    // });
-
     App.contracts.DigiArtPlat.deployed().then(function(instance) {
       platInstance = instance;
 
-      return platInstance.getUser.call();
+      return platInstance.getBuyer.call();
     }).then(function(user) {
       console.log(user);
-      for (var i = 0; i < user.length; i++) {
-        // var strVar = "[data-id='"+String(i)+"']";
-        if (user[i] == "0x0000000000000000000000000000000000000000") {
+      for (i = 0; i < user.length; i++) {
+        if (user[i] !== "0x0000000000000000000000000000000000000000") {
+          console.log(i + 'success');
+          $('.panel-art').eq(i).find('.btn-ica').css("display", "none");
+          $('.panel-art').eq(i).find('.btn-buy').css('display', "block").text('Sold').attr('disabled', true);
+          $('.panel-art').eq(i).find('.btn-rent').css('display', "none");
+          $('.panel-art').eq(i).find('.btn-bid').css('display', "none");
+        }
+        else {
           $('.panel-art').eq(i).find('.btn-ica').css("display", "block");
           $('.panel-art').eq(i).find('.btn-ibuy').css("display", "none");
           $('.panel-art').eq(i).find('.btn-irent').css("display", "none");
@@ -172,18 +172,12 @@ App = {
           $('.panel-art').eq(i).find('.btn-ibid').css("display", "none");
           $('.panel-art').eq(i).find('.btn-cbid').css("display", "none");
           $('.panel-art').eq(i).find('.btn-cbuy').css("display", "none");
-          
-        }
-        else {
-          $('.panel-art').eq(i).find('.btn-ica').css("display", "none");
-          App.status1[i][0] == 0? $('.panel-art').eq(i).find('.btn-ibuy').css("display", "block") : $('.panel-art').eq(i).find('.btn-cbuy').css("display", "block");
-          App.status1[i][1] == 0? $('.panel-art').eq(i).find('.btn-irent').css("display", "block") : $('.panel-art').eq(i).find('.btn-crent').css("display", "block");
-          App.status1[i][2] == 0? $('.panel-art').eq(i).find('.btn-ibid').css("display", "block") : $('.panel-art').eq(i).find('.btn-cbid').css("display", "block");
         }
       }
     }).catch(function(err) {
       console.log(err.message);
     });
+
   },
 
   handleBuy: function(event) {
@@ -191,7 +185,6 @@ App = {
 
     var artId = parseInt($(event.target).data('id'));
 
-    var platInstance;
 
     web3.eth.getAccounts(function(error, accounts) {
       if (error) {
@@ -204,12 +197,18 @@ App = {
         platInstance = instance;
 // ******************************************
         return platInstance.buy(artId, {from: account});
+        
 // ******************************************
       }).then(function(result) {
-        // return App.markSuccess();
+        console.log("Art bought");
+        var strVar = "[data-id='"+String(artId)+"']";
+        $(strVar + ".btn-buy").text('Sold').attr('disabled', true);
+        $(strVar + ".btn-rent").css('display', "none");
+        $(strVar + ".btn-bid").css('display', "none");
+        
+        App.markSuccess();
       }).catch(function(err) {
         console.log(err.message);
-        // return App.markSuccess();
       });
     });
   },
@@ -218,8 +217,20 @@ App = {
     event.preventDefault();
 
     var artId = parseInt($(event.target).data('id'));
+    var strVar = "[data-id='"+String(artId)+"']";
+    console.log(strVar);
+    $(strVar + ".form-group").css('display') == "none" ? 
+      $(strVar + ".form-group").css('display', "block"): $(strVar + ".form-group").css('display', "none");
+    $(strVar + ".btn-rentconf").css('display') == "none" ? 
+      $(strVar + ".btn-rentconf").css('display', "block"): $(strVar + ".btn-rentconf").css('display', "none");
 
-    var platInstance;
+  },
+
+  handleRent2: function(event) {
+    event.preventDefault();
+
+    var artId = parseInt($(event.target).data('id'));
+
 
     web3.eth.getAccounts(function(error, accounts) {
       if (error) {
@@ -231,10 +242,19 @@ App = {
       App.contracts.DigiArtPlat.deployed().then(function(instance) {
         platInstance = instance;
 // ******************************************
-        return platInstance.rent(artId, {from: account});
+        return platInstance.rent(artId, 0, "s", {from: account});
+        
 // ******************************************
       }).then(function(result) {
-        // return App.markSuccess();
+        console.log("Art bought");
+        var strVar = "[data-id='"+String(artId)+"']";
+        $(strVar + ".btn-buy").text('Sold').attr('disabled', true);
+        $(strVar + ".btn-rent").css('display', "none");
+        $(strVar + ".btn-bid").css('display', "none");
+        $(strVar + ".form-group").css('display', "none");
+        $(strVar + ".btn-rentconf").css('display', "none");
+        
+        App.markSuccess();
       }).catch(function(err) {
         console.log(err.message);
       });
@@ -274,6 +294,8 @@ App = {
 
     var artId = parseInt($(event.target).data('id'));
 
+    var strVar = "[data-id='"+String(artId)+"']";
+    var price = $(".price" + strVar).attr('placeholder');
 
     web3.eth.getAccounts(function(error, accounts) {
       if (error) {
@@ -285,16 +307,13 @@ App = {
       App.contracts.DigiArtPlat.deployed().then(function(instance) {
         platInstance = instance;
   // ******************************************
-        return platInstance.createArt(artId, {from: account});
+        return platInstance.createArt(artId, price, {from: account});
         
         // ******************************************
       }).then(function(result) {
         console.log("Art Created");
         var strVar = "[data-id='"+String(artId)+"']";
-        $(strVar + ".btn-ica").css("display", "none");
-        $(strVar + ".btn-ibuy").css("display", "block");
-        $(strVar + ".btn-irent").css("display", "block");
-        $(strVar + ".btn-ibid").css("display", "block");
+        $(strVar + ".btn-ica").css("display", "block").text("Done").attr('disabled', true);
         
         App.markSuccess();
       }).catch(function(err) {
@@ -305,7 +324,6 @@ App = {
   },
 
   initBuy: function(event) {
-    console.log("sd");
     event.preventDefault();
 
     var artId = parseInt($(event.target).data('id'));
@@ -338,32 +356,32 @@ App = {
 
 
   initRent: function(event) {
-    
-
     event.preventDefault();
 
     var artId = parseInt($(event.target).data('id'));
 
+    var strVar = "[data-id='"+String(artId)+"']";
+    var price = $(".price" + strVar).attr('placeholder');
 
-    var address = "0x0000000000000000000000000000000000000000";
+    web3.eth.getAccounts(function(error, accounts) {
+      if (error) {
+        console.log(error);
+      }
 
-    App.toggleRentButton();
+      var account = accounts[0];
 
-    var newArtId = 0;
-
+      console.log(account);
     App.contracts.DigiArtPlat.deployed().then(function(instance) {
       platInstance = instance;
-// ******************************************
-      if (address !== "")
-        return platInstance.initialRent(newArtId, price, address);
-      else
-        return platInstance.initialRent(newArtId, price, "0x0000000000000000000000000000000000000000");
-      // ******************************************
+        return platInstance.initialRent(artId, price);
+        
     }).then(function(result) {
-      App.status1[artId][1] = 1;
-      console.log("Upload Successful!");
+        console.log("init rent");
+        $(strVar + ".btn-irent").css("display", "none");
+        $(strVar + ".btn-crent").css("display", "block");
     }).catch(function(err) {
       console.log(err.message);
+    });
     });
   },
 
@@ -373,7 +391,6 @@ App = {
 
     var artId = parseInt($(event.target).data('id'));
 
-    App.toggleBidButton();
 
     var address = "0x0000000000000000000000000000000000000000";
     var newArtId = 0;
@@ -402,7 +419,6 @@ App = {
 
     var platInstance;
 
-    App.toggleRentButton();
 
     web3.eth.getAccounts(function(error, accounts) {
       if (error) {
@@ -430,7 +446,6 @@ App = {
 
     var artId = parseInt($(event.target).data('id'));
 
-    App.toggleBidButton();
 
     var platInstance;
 

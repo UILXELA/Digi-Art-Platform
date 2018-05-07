@@ -25,60 +25,12 @@
   },
   {
     "id": 3,
-    "name": "Guernica",
-    "picture": "images/Guernica.jpg",
-    "year": 1937,
-    "author": "Pablo Ruiz Picasso",
-    "price": "10"
-  },
-  {
-    "id": 4,
-    "name": "Mona Lisa",
-    "picture": "images/monalisa.jpg",
-    "year": 1503,
-    "author": "Leonardo da Vinci",
-    "price": "20"
-  },
-  {
-    "id": 5,
-    "name": "Sunflowers",
-    "picture": "images/sunflowers.jpg",
-    "year": 1888,
-    "author": "Vincent Willem van Gogh",
+    "name": "Impression, Sunrise",
+    "picture": "images/sunrise.jpg",
+    "year": 1872,
+    "author": "Claude Monet",
     "price": "30"
   },
-  {
-    "id": 6,
-    "name": "Guernica",
-    "picture": "images/Guernica.jpg",
-    "year": 1937,
-    "author": "Pablo Ruiz Picasso",
-    "price": "10"
-  },
-  {
-    "id": 7,
-    "name": "Mona Lisa",
-    "picture": "images/monalisa.jpg",
-    "year": 1503,
-    "author": "Leonardo da Vinci",
-    "price": "20"
-  },
-  {
-    "id": 8,
-    "name": "Sunflowers",
-    "picture": "images/sunflowers.jpg",
-    "year": 1888,
-    "author": "Vincent Willem van Gogh",
-    "price": "30"
-  }
-  {
-    "id": 3,
-    "name": "Tahitian Women on the Beach",
-    "picture": "images/tahitian.jpg",
-    "year": 1891,
-    "author": "Paul Gauguin",
-    "price": "30"
-  }
   {
     "id": 4,
     "name": "The Pool at Jas de Bouffan",
@@ -86,15 +38,15 @@
     "year": 1885,
     "author": "Paul Cézanne",
     "price": "30"
-  }
+  },
   {
     "id": 5,
-    "name": "The Hippopotamus and Crocodile Hunt",
+    "name": "Crocodile Hunt",
     "picture": "images/hunt.jpg",
     "year": 1616,
     "author": "Peter Paul Rubens",
     "price": "30"
-  }
+  },
   {
     "id": 6,
     "name": "The Fall of the Damned",
@@ -102,7 +54,7 @@
     "year": 1620,
     "author": "Peter Paul Rubens",
     "price": "30"
-  }
+  },
   {
     "id": 7,
     "name": "Self-portrait",
@@ -110,15 +62,15 @@
     "year": 1614,
     "author": "Anthony van Dyck",
     "price": "30"
-  }
+  },
   {
     "id": 8,
-    "name": "Impression, Sunrise",
-    "picture": "images/subrise.jpg",
-    "year": 1872,
-    "author": "Claude Monet",
+    "name": "Tahitian Women on the Beach",
+    "picture": "images/tahitian.jpg",
+    "year": 1891,
+    "author": "Paul Gauguin",
     "price": "30"
   }
-
+  
   
 ]
