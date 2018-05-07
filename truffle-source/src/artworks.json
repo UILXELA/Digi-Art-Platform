@@ -22,5 +22,53 @@
     "year": 1888,
     "author": "Vincent Willem van Gogh",
     "price": "30"
+  },
+  {
+    "id": 3,
+    "name": "Guernica",
+    "picture": "images/Guernica.jpg",
+    "year": 1937,
+    "author": "Pablo Ruiz Picasso",
+    "price": "10"
+  },
+  {
+    "id": 4,
+    "name": "Mona Lisa",
+    "picture": "images/monalisa.jpg",
+    "year": 1503,
+    "author": "Leonardo da Vinci",
+    "price": "20"
+  },
+  {
+    "id": 5,
+    "name": "Sunflowers",
+    "picture": "images/sunflowers.jpg",
+    "year": 1888,
+    "author": "Vincent Willem van Gogh",
+    "price": "30"
+  },
+  {
+    "id": 6,
+    "name": "Guernica",
+    "picture": "images/Guernica.jpg",
+    "year": 1937,
+    "author": "Pablo Ruiz Picasso",
+    "price": "10"
+  },
+  {
+    "id": 7,
+    "name": "Mona Lisa",
+    "picture": "images/monalisa.jpg",
+    "year": 1503,
+    "author": "Leonardo da Vinci",
+    "price": "20"
+  },
+  {
+    "id": 8,
+    "name": "Sunflowers",
+    "picture": "images/sunflowers.jpg",
+    "year": 1888,
+    "author": "Vincent Willem van Gogh",
+    "price": "30"
   }
 ]

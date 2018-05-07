@@ -5,7 +5,10 @@ contract DigiArtPlat{
     // function DigiArtPlat() public{
     // }
 
-    address[16] public user;
+    address[9] public userDat;
+    address[9] public buyerDat;
+    uint[9] public prices;
+    uint[9][3] public status1;
 
     enum ArtStates { hold, selling, auctioning, renting}
     struct Art{
@@ -46,7 +49,12 @@ contract DigiArtPlat{
         _;
     }
 
-    function createArt() public returns(uint){
+    function createArt(uint Id) public returns(uint){
+
+        require(Id >= 0 && Id <= 9);
+
+        userDat[Id] = msg.sender;
+
         arts[artID] = Art({
             owner: msg.sender,
             users: new address[](0),
@@ -67,27 +75,35 @@ contract DigiArtPlat{
     }
 
 
-    function initiateSale(uint ID, uint _price, address _to) public onlyOwner(arts[ID]) {
+    function initiateSale(uint ID, uint _price) /*, address _to ) */public onlyOwner(arts[ID]) {
+        
+        require(ID >= 0 && ID <= 9);
+
+        prices[ID] = _price;
+        status1[ID][0] = 1;
+
+
+
         //artist can either set a target buyer or not(open sale)
-        require(_to != address(this) && _to != arts[ID].owner);
-        require(arts[ID].state == ArtStates.hold);
+        // require(_to != address(this) && _to != arts[ID].owner);
+        // require(arts[ID].state == ArtStates.hold);
 
-        arts[ID].state = ArtStates.selling;
+        // arts[ID].state = ArtStates.selling;
 
-        arts[ID].targetBuyer = _to;
+        // arts[ID].targetBuyer = _to;
 
-        arts[ID].currentPrice = _price;
+        // arts[ID].currentPrice = _price;
     }
 
     function initialRent(uint ID, uint _rent, address _to) public onlyOwner(arts[ID]){
-        require(_to != address(this) && _to != arts[ID].owner);
-        require(arts[ID].state == ArtStates.hold);
+        // require(_to != address(this) && _to != arts[ID].owner);
+        // require(arts[ID].state == ArtStates.hold);
 
-        arts[ID].state = ArtStates.renting;
+        // arts[ID].state = ArtStates.renting;
 
-        arts[ID].targetRenter = _to;
+        // arts[ID].targetRenter = _to;
 
-        arts[ID].currentRent = _rent;
+        // arts[ID].currentRent = _rent;
     }
 
     function initiateAuction(uint ID, uint _price, uint duration) public onlyOwner(arts[ID]) {
@@ -112,6 +128,10 @@ contract DigiArtPlat{
         require(msg.sender == arts[ID].targetBuyer || arts[ID].targetBuyer == address(0));
         require(msg.value == arts[ID].currentPrice * 1 finney);
 
+        require(ID >= 0 && ID <= 9);
+
+        buyerDat[ID] = msg.sender;
+
         // Change ownership
         address prevOwner = arts[ID].owner;
         address newOwner = msg.sender;
@@ -125,8 +145,8 @@ contract DigiArtPlat{
         toOwner[artID] = newOwner;
         emit Transfer("buy", now, prevOwner, newOwner, salePrice);
 
-        score[msg.sender] +=500;
-        ratingCount[msg.sender] +=1;
+        score[msg.sender] += 500;
+        ratingCount[msg.sender] += 1;
         rating[msg.sender] = score[msg.sender]/ratingCount[msg.sender];
 
     }
@@ -136,6 +156,10 @@ contract DigiArtPlat{
         require(arts[ID].state == ArtStates.renting);
         require(msg.sender == arts[ID].targetRenter);
         require(msg.value == arts[ID].currentRent * 1 finney);
+
+        require(ID >= 0 && ID <= 9);
+
+        buyerDat[ID] = msg.sender;
 
         uint rentPrice = arts[ID].currentRent;
         arts[ID].users.push(msg.sender);
@@ -162,6 +186,11 @@ contract DigiArtPlat{
     }
 
     function bid(uint ID) public notOwner(arts[ID]) payable{
+
+        require(ID >= 0 && ID <= 9);
+
+        buyerDat[ID] = msg.sender;
+
         require(now<=arts[ID].auctionStart+arts[ID].auctionDuration * 1 hours);
         require(arts[ID].state == ArtStates.auctioning);
         require(msg.value>arts[ID].currentBid*1 finney);
@@ -205,8 +234,12 @@ contract DigiArtPlat{
 
     //}
 
-    function getUser() public view returns (address[16]) {
-        return user;
+    function getUser() public view returns (address[9]) {
+        return userDat;
+    }
+
+    function getBuyer() public view returns (address[9]) {
+        return buyerDat;
     }
 
 

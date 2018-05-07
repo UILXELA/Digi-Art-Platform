@@ -21,73 +21,15 @@
     <div class="container">
       <div class="row">
         <div class="col-xs-12 col-sm-8 col-sm-push-2">
-          <h1 class="text-center">Artist Page</h1>
+          <h1 class="text-center">User Page</h1>
           <hr/>
           <br/>
         </div>
       </div>
 
-      <div>
-        <a href="./"><button class="btn btn-default" type="button">Back</button></a>
-        <div id="my-form-div">
-          <form id="my-form">
-            <div class="form-group">
-              <label for="name" class="col-2 col-form-label">Artwork Title</label>
-              <div class="col-10">
-                <input class="form-control" type="text" value="" id="name">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="author" class="col-2 col-form-label">Author</label>
-              <div class="col-10">
-                <input class="form-control" type="text" value="" id="author">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="year" class="col-2 col-form-label">Year</label>
-              <div class="col-10">
-                <input class="form-control" type="month" value="2018-04" id="year">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="thumbnail">File input</label>
-              <input type="file" class="form-control-file" id="thumbnail" aria-describedby="fileHelp">
-            </div>
-            <div class="form-group">
-              <label for="description">Desciption</label>
-              <textarea class="form-control" id="description" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="mode">Select if you want people to buy, rent or bid your work?</label>
-              <select class="form-control" id="mode">
-                <option>Buy</option>
-                <option>Rent</option>
-                <option>Bid</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="address" class="col-2 col-form-label">Address (optional)</label>
-              <div class="col-10">
-                <input class="form-control" type="text" value="" id="address">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="price" class="col-2 col-form-label">Price</label>
-              <div class="col-10">
-                <input class="form-control" type="number" value="" id="price">
-              </div>
-            </div>
-            <button type="submit" class="btn btn-primary submit-art">Submit</button>
-          </form>
-          <br />
-        </div>
-      </div>
-      
-
-
+      <a href="./"><button class="btn btn-default" type="button" data-page="user">Back</button></a>
 
       <div id="artRow" class="row">
-        <!-- PETS LOAD HERE -->
       </div>
     </div>
 
@@ -102,10 +44,17 @@
             <br/><br/>
             <strong>Author</strong>: <span class="author">Jing Jiang</span><br/>
             <strong>Year</strong>: <span class="year">2018</span><br/>
-            <strong>Price</strong>: <span class="price">5</span><br/><br/>
-            <button class="btn btn-default btn-ibuy" type="button" data-id="0">Initiate Buy</button>
-            <button class="btn btn-default btn-irent" type="button" data-id="0">Initiate Rent</button>
-            <button class="btn btn-default btn-ibid" type="button" data-id="0">Initiate Bid</button>
+            <form class="form-inline">
+                <label class="mr-sm-2" for="priceInput">Price</label>
+                <input type="number" class="form-control mb-2 mr-sm-2 mb-sm-0 price" id="priceInput" data-id="0" placeholder="20">
+            </form>              
+            <button class="btn btn-primary btn-ica" type="button" data-id="0" style="display: block;">Put on Market</button>
+            <button class="btn btn-default btn-ibuy" type="button" data-id="0" style="display: none;">Activate Buy</button>
+            <button class="btn btn-default btn-cbuy" type="button" data-id="0" style="display: none;" disabled="true">Activated</button>
+            <button class="btn btn-default btn-irent" type="button" data-id="0" style="display: none;">Activate Rent</button>
+            <button class="btn btn-default btn-crent" type="button" data-id="0" style="display: none;">End Rent</button>
+            <button class="btn btn-default btn-ibid" type="button" data-id="0" style="display: none;">Activate Bid</button>
+            <button class="btn btn-default btn-cbid" type="button" data-id="0" style="display: none;">Close Bid</button>
           </div>
         </div>
       </div>
