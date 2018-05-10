@@ -128,13 +128,13 @@ contract DigiArtPlat{
         arts[ID].targetBuyer = address(0);
     }
 
-    function buy(uint ID) public returns(uint) /*notOwner(arts[ID]) payable */{
+    function buy(uint ID) public payable/*notOwner(arts[ID]) payable */{
 
         require(ID >= 0 && ID <= 9);
 
         buyerDat[ID] = msg.sender;
 
-        return ID;
+        // return ID;
 
         // require(arts[ID].state == ArtStates.selling);
         // require(msg.sender != arts[ID].owner);

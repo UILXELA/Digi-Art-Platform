@@ -186,6 +186,10 @@ App = {
     var artId = parseInt($(event.target).data('id'));
 
 
+    var strVar = "[data-id='"+String(artId)+"']";
+    var price = $(".price" + strVar).attr('placeholder');
+
+
     web3.eth.getAccounts(function(error, accounts) {
       if (error) {
         console.log(error);
@@ -196,7 +200,7 @@ App = {
       App.contracts.DigiArtPlat.deployed().then(function(instance) {
         platInstance = instance;
 // ******************************************
-        return platInstance.buy(artId, {from: account});
+        return platInstance.buy(artId, {from: account, value: web3.toWei(10000, "finney"), gas:300000 });
         
 // ******************************************
       }).then(function(result) {
@@ -230,7 +234,7 @@ App = {
     event.preventDefault();
 
     var artId = parseInt($(event.target).data('id'));
-
+	var price;		
 
     web3.eth.getAccounts(function(error, accounts) {
       if (error) {
@@ -265,7 +269,7 @@ App = {
     event.preventDefault();
 
     var artId = parseInt($(event.target).data('id'));
-
+	var price;
     var platInstance;
 
     web3.eth.getAccounts(function(error, accounts) {
@@ -278,7 +282,8 @@ App = {
       App.contracts.DigiArtPlat.deployed().then(function(instance) {
         platInstance = instance;
 // ******************************************
-        return platInstance.bid(artId, {from: account});
+        instance.getBid.call(artId).then(function(result) {price = result;})
+        return platInstance.bid(artId, {from: account, value: web3.toWei(price, "finney"), gas:30000 });
 // ******************************************
       }).then(function(result) {
         // return App.markSuccess();
@@ -390,16 +395,12 @@ App = {
     event.preventDefault();
 
     var artId = parseInt($(event.target).data('id'));
-
-
-    var address = "0x0000000000000000000000000000000000000000";
-    var newArtId = 0;
-
+	var price = $(".price" + strVar).attr('placeholder');
 
     App.contracts.DigiArtPlat.deployed().then(function(instance) {
       platInstance = instance;
 // ******************************************
-      return platInstance.initiateAuction(newArtId, price, address);
+      return platInstance.initiateAuction(artId, price, 1);
       
       // ******************************************
     }).then(function(result) {
@@ -416,6 +417,7 @@ App = {
     event.preventDefault();
 
     var artId = parseInt($(event.target).data('id'));
+    var price = $(".price" + strVar).attr('placeholder');
 
     var platInstance;
 
@@ -430,7 +432,7 @@ App = {
       App.contracts.DigiArtPlat.deployed().then(function(instance) {
         platInstance = instance;
 // ******************************************
-        return platInstance.buy(artId, {from: account});
+        return platInstance.buy(artId, {from: account, value: web3.toWei(price, "finney"), gas:30000 });
 // ******************************************
       }).then(function(result) {
         // return App.markSuccess();
@@ -459,7 +461,7 @@ App = {
       App.contracts.DigiArtPlat.deployed().then(function(instance) {
         platInstance = instance;
 // ******************************************
-        return platInstance.buy(artId, {from: account});
+        return platInstance.closeAuction(artId, {from: account});
 // ******************************************
       }).then(function(result) {
         // return App.markSuccess();
