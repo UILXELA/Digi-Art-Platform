@@ -61,7 +61,7 @@ contract DigiArtPlat{
             users: new address[](0),
             targetBuyer: address(0),
             targetRenter: address(0),
-            currentPrice: 0,
+            currentPrice: _price,
             currentRent: 0,
             //rent per day
             currentBid: 0,
@@ -77,7 +77,7 @@ contract DigiArtPlat{
 
 
     function initiateSale(uint ID, uint _price) /*, address _to ) */public onlyOwner(arts[ID]) {
-        
+
         require(ID >= 0 && ID <= 9);
 
         prices[ID] = _price;
@@ -87,17 +87,17 @@ contract DigiArtPlat{
 
         //artist can either set a target buyer or not(open sale)
         // require(_to != address(this) && _to != arts[ID].owner);
-        // require(arts[ID].state == ArtStates.hold);
+        require(arts[ID].state == ArtStates.hold);
 
-        // arts[ID].state = ArtStates.selling;
+        arts[ID].state = ArtStates.selling;
 
         // arts[ID].targetBuyer = _to;
 
-        // arts[ID].currentPrice = _price;
+         arts[ID].currentPrice = _price;
     }
 
     function initialRent(uint ID, uint _rent /*, address _to*/) public onlyOwner(arts[ID]){
-                
+
         require(ID >= 0 && ID <= 9);
 
         prices[ID] = _rent;
@@ -128,45 +128,46 @@ contract DigiArtPlat{
         arts[ID].targetBuyer = address(0);
     }
 
-    function buy(uint ID) public payable/*notOwner(arts[ID]) payable */{
+    function buy(uint ID) public payable returns(uint) /*notOwner(arts[ID]) payable */{
 
         require(ID >= 0 && ID <= 9);
 
         buyerDat[ID] = msg.sender;
 
-        // return ID;
 
-        // require(arts[ID].state == ArtStates.selling);
-        // require(msg.sender != arts[ID].owner);
+
+        require(arts[ID].state == ArtStates.selling);
+        require(msg.sender != arts[ID].owner);
         // require(msg.sender == arts[ID].targetBuyer || arts[ID].targetBuyer == address(0));
-        // require(msg.value == arts[ID].currentPrice * 1 finney);
+        require(msg.value == arts[ID].currentPrice * 1 ether);
 
         // require(ID >= 0 && ID <= 9);
 
         // buyerDat[ID] = msg.sender;
 
         // // Change ownership
-        // address prevOwner = arts[ID].owner;
-        // address newOwner = msg.sender;
-        // uint salePrice = arts[ID].currentPrice;
+         address prevOwner = arts[ID].owner;
+         address newOwner = msg.sender;
+         uint salePrice = arts[ID].currentPrice;
 
         // // Transaction cleanup
-        // resetSale(ID);
+         resetSale(ID);
 
-        // prevOwner.transfer(salePrice* 1 finney);
-        // arts[ID].owner = newOwner;
-        // toOwner[artID] = newOwner;
-        // emit Transfer("buy", now, prevOwner, newOwner, salePrice);
+         prevOwner.transfer(salePrice* 1 ether);
+         arts[ID].owner = newOwner;
+         toOwner[artID] = newOwner;
+         emit Transfer("buy", now, prevOwner, newOwner, salePrice);
 
         // score[msg.sender] += 500;
         // ratingCount[msg.sender] += 1;
         // rating[msg.sender] = score[msg.sender]/ratingCount[msg.sender];
+        return ID;
 
     }
 
     function rent(uint ID, uint start, /*uint duration,*/ string destination)public /*notOwner(arts[ID]) payable*/ returns(uint){
 
-        
+
         require(ID >= 0 && ID <= 9);
 
         buyerDat[ID] = msg.sender;
