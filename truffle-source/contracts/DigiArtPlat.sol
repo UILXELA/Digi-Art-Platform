@@ -136,7 +136,7 @@ contract DigiArtPlat{
 
 
 
-        require(arts[ID].state == ArtStates.selling);
+        //require(arts[ID].state == ArtStates.selling);
         require(msg.sender != arts[ID].owner);
         // require(msg.sender == arts[ID].targetBuyer || arts[ID].targetBuyer == address(0));
         require(msg.value == arts[ID].currentPrice * 1 ether);
