@@ -56,7 +56,7 @@ contract DigiArtPlat{
         prices[Id] = _price;
         userDat[Id] = msg.sender;
 
-        arts[artID] = Art({
+        arts[Id] = Art({
             owner: msg.sender,
             users: new address[](0),
             targetBuyer: address(0),
@@ -117,7 +117,7 @@ contract DigiArtPlat{
 
         arts[ID].state = ArtStates.auctioning;
 
-        arts[ID].currentBid = _price;
+        arts[ID].currentBid = 0;
         arts[ID].winning = arts[ID].owner;
         arts[ID].auctionStart = now;
         arts[ID].auctionDuration = duration;
@@ -165,7 +165,7 @@ contract DigiArtPlat{
 
     }
 
-    function rent(uint ID, uint start, /*uint duration,*/ string destination)public /*notOwner(arts[ID]) payable*/ returns(uint){
+    function rent(uint ID, uint start /*uint duration,string destination*/)public payable /*notOwner(arts[ID]) payable*/ returns(uint){
 
 
         require(ID >= 0 && ID <= 9);
@@ -176,7 +176,7 @@ contract DigiArtPlat{
         //to subscribe, need to call this function
         // require(arts[ID].state == ArtStates.renting);
         // require(msg.sender == arts[ID].targetRenter);
-        // require(msg.value == arts[ID].currentRent * 1 finney);
+        // require(msg.value == arts[ID].currentRent * 1 ether);
 
         // require(ID >= 0 && ID <= 9);
 
@@ -186,7 +186,7 @@ contract DigiArtPlat{
         // arts[ID].users.push(msg.sender);
         // uint index = arts[ID].users.length-1;
         // arts[ID].userIndex[msg.sender] = index;
-        // arts[ID].owner.transfer(arts[ID].currentRent* 1 finney);
+        arts[ID].owner.transfer(arts[ID].currentRent* 1 ether);
         // arts[ID].rentStart[msg.sender] = now + start * 1 days;
         // arts[ID].rentDuration[msg.sender] = duration;
         // arts[ID].destination[msg.sender] = destination;
@@ -214,15 +214,15 @@ contract DigiArtPlat{
 
         require(now<=arts[ID].auctionStart+arts[ID].auctionDuration * 1 hours);
         require(arts[ID].state == ArtStates.auctioning);
-        require(msg.value>arts[ID].currentBid*1 finney);
-        arts[ID].winning.transfer(arts[ID].currentBid* 1 finney);
+        require(msg.value>arts[ID].currentBid*1 ether);
+        arts[ID].winning.transfer(arts[ID].currentBid* 1 ether);
         //address prevWinning = arts[ID].winning;
         arts[ID].winning = msg.sender;
-        arts[ID].currentBid = msg.value/1000000000000000;
+        arts[ID].currentBid = msg.value/1000000000000000000;
 
     }
 
-    function closeAuction(uint ID, uint rate) public onlyOwner(arts[ID]){
+    function closeAuction(uint ID, uint rate) public payable onlyOwner(arts[ID]){
         require(arts[ID].state == ArtStates.auctioning);
         require(now>=arts[ID].auctionStart+arts[ID].auctionDuration * 1 hours+15 minutes); //duration is in hours
         if (arts[ID].winning == arts[ID].owner){
@@ -235,14 +235,14 @@ contract DigiArtPlat{
             address prevOwner = arts[ID].owner;
             uint _price = arts[ID].currentBid;
             address winner = arts[ID].winning;
-            prevOwner.transfer(_price* 1 finney);
+            prevOwner.transfer(_price* 1 ether);
             arts[ID].owner = winner;
             toOwner[artID] = winner;
             emit Transfer("auction", now, prevOwner, winner, _price);
             require(rate<=500);
-            score[msg.sender] += rate;
-            ratingCount[msg.sender] += 1;
-            rating[msg.sender] = score[msg.sender]/ratingCount[msg.sender];
+            score[winner] +=rate;
+            ratingCount[winner] +=1;
+            rating[winner] = score[winner]/ratingCount[winner];
         }
 
     }
@@ -267,9 +267,21 @@ contract DigiArtPlat{
         return status1;
     }
 
-    function getPrice() public view returns (uint[9]) {
+    function getPrices() public view returns (uint[9]) {
         return prices;
     }
 
+    function getPrice(uint id) public view returns (uint) {
+        uint price_ = arts[id].currentPrice;
+        return price_;
+    }
 
+    function getRent(uint id) public view returns (uint) {
+        uint rent_ = arts[id].currentRent;
+        return rent_;
+    }
+
+    function getOwner(uint id) public view returns (address) {
+        return arts[id].owner;
+    }
 }
