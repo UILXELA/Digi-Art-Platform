@@ -41,7 +41,7 @@ App = {
       App.contracts.DigiArtPlat.deployed().then(function(instance) {
         platInstance = instance;
   
-        return platInstance.getPrice.call();
+        return platInstance.getPrices.call();
       }).then(function(user) {
         users1 = user;
         
@@ -184,8 +184,7 @@ App = {
     event.preventDefault();
 
     var artId = parseInt($(event.target).data('id'));
-	var strVar = "[data-id='"+String(artId)+"']";
-    var price = $(".price" + strVar).attr('placeholder');
+    var price;
 
 
     web3.eth.getAccounts(function(error, accounts) {
@@ -197,8 +196,12 @@ App = {
 
       App.contracts.DigiArtPlat.deployed().then(function(instance) {
         platInstance = instance;
+    
+        instance.getPrice.call(artId).then(function(price_) {price = price_;
+        return platInstance.buy(artId, {from: account, value: web3.toWei(price, "ether"), gas:300000 });
+        })
 // ******************************************
-        return platInstance.buy(artId, {from: account, value: web3.toWei(10, "ether"), gas:300000 });
+        
         
 // ******************************************
       }).then(function(result) {
@@ -232,7 +235,7 @@ App = {
     event.preventDefault();
 
     var artId = parseInt($(event.target).data('id'));
-
+	var rent;
 
     web3.eth.getAccounts(function(error, accounts) {
       if (error) {
@@ -244,13 +247,15 @@ App = {
       App.contracts.DigiArtPlat.deployed().then(function(instance) {
         platInstance = instance;
 // ******************************************
-        return platInstance.rent(artId, 0, "s", {from: account});
+		instance.getPrice.call(artId).then(function(price_) {rent = price_;
+        return platInstance.buy(artId, {from: account, value: web3.toWei(rent, "ether"), gas:300000 });
+        })
         
 // ******************************************
       }).then(function(result) {
         console.log("Art bought");
         var strVar = "[data-id='"+String(artId)+"']";
-        $(strVar + ".btn-buy").text('Sold').attr('disabled', true);
+        $(strVar + ".btn-buy").text('Rented').attr('disabled', true);
         $(strVar + ".btn-rent").css('display', "none");
         $(strVar + ".btn-bid").css('display', "none");
         $(strVar + ".form-group").css('display', "none");
