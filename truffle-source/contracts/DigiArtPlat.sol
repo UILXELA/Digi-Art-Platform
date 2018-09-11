@@ -2,6 +2,7 @@ pragma solidity ^0.4.2;
 
 //Art class for artwork
 contract DigiArtPlat{
+
     // function DigiArtPlat() public{
     // }
 
@@ -43,6 +44,8 @@ contract DigiArtPlat{
         require(msg.sender == a.owner);
         _;
     }
+    uint artID = 0;
+    mapping (uint=>Art) arts;
 
     modifier notOwner(Art a) {
         require(msg.sender != a.owner);
@@ -74,7 +77,6 @@ contract DigiArtPlat{
         artID = artID+1;
         return artID - 1;
     }
-
 
     function initiateSale(uint ID, uint _price) /*, address _to ) */public onlyOwner(arts[ID]) {
 
@@ -284,4 +286,5 @@ contract DigiArtPlat{
     function getOwner(uint id) public view returns (address) {
         return arts[id].owner;
     }
+
 }
