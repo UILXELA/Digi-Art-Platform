@@ -1,0 +1,76 @@
+[
+  {
+    "id": 0,
+    "name": "Guernica",
+    "picture": "images/Guernica.jpg",
+    "year": 1937,
+    "author": "Pablo Ruiz Picasso",
+    "price": "10"
+  },
+  {
+    "id": 1,
+    "name": "Mona Lisa",
+    "picture": "images/monalisa.jpg",
+    "year": 1503,
+    "author": "Leonardo da Vinci",
+    "price": "20"
+  },
+  {
+    "id": 2,
+    "name": "Sunflowers",
+    "picture": "images/sunflowers.jpg",
+    "year": 1888,
+    "author": "Vincent Willem van Gogh",
+    "price": "30"
+  },
+  {
+    "id": 3,
+    "name": "Impression, Sunrise",
+    "picture": "images/sunrise.jpg",
+    "year": 1872,
+    "author": "Claude Monet",
+    "price": "30"
+  },
+  {
+    "id": 4,
+    "name": "The Pool at Jas de Bouffan",
+    "picture": "images/pool.jpg",
+    "year": 1885,
+    "author": "Paul Cézanne",
+    "price": "30"
+  },
+  {
+    "id": 5,
+    "name": "Crocodile Hunt",
+    "picture": "images/hunt.jpg",
+    "year": 1616,
+    "author": "Peter Paul Rubens",
+    "price": "30"
+  },
+  {
+    "id": 6,
+    "name": "The Fall of the Damned",
+    "picture": "images/fall.jpg",
+    "year": 1620,
+    "author": "Peter Paul Rubens",
+    "price": "30"
+  },
+  {
+    "id": 7,
+    "name": "Self-portrait",
+    "picture": "images/self.jpg",
+    "year": 1614,
+    "author": "Anthony van Dyck",
+    "price": "30"
+  },
+  {
+    "id": 8,
+    "name": "Tahitian Women on the Beach",
+    "picture": "images/tahitian.jpg",
+    "year": 1891,
+    "author": "Paul Gauguin",
+    "price": "30"
+  }
+  
+  
+]
