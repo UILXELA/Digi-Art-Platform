@@ -12,4 +12,6 @@ We used lite-server to host our demo website locally, and we used bootstrap to s
 
 The functions of the demo website is still incomplete, it can only serves as a demonstration of the process of trading an art. However, all functions works fine on the Solidity IDE. We are still looking for better approaches to solve the ID management problem.
 
-Final Video Presentation <iframe width="560" height="315" src="https://www.youtube.com/embed/B3KlEAneDMI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+Final Video Presentation
+
+[![Art Trading Platform](https://img.youtube.com/vi/B3KlEAneDMI/0.jpg)]
