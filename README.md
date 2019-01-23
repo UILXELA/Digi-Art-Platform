@@ -10,7 +10,7 @@ We used Truffle, Metamask, and Ganache to build our application.
 We used Solidity to write the smart contracts.
 We used lite-server to host our demo website locally, and we used bootstrap to style our demo website.
 
-The functions of the demo website is still incomplete, it can only serves as a demonstration of the process of trading an art. However, all functions works fine on the Solidity IDE. We are still looking for better approaches to solve the ID management problem.
+All functions works fine on the Solidity IDE. We are still looking for better approaches to solve the ID management problem.
 
 Final Video Presentation
 
