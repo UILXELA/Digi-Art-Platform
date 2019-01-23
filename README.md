@@ -14,4 +14,4 @@ The functions of the demo website is still incomplete, it can only serves as a d
 
 Final Video Presentation
 
-[![Art Trading Platform](https://img.youtube.com/vi/B3KlEAneDMI/0.jpg)]
+[![Art Trading Platform](https://img.youtube.com/vi/B3KlEAneDMI/0.jpg)](https://www.youtube.com/watch?v=B3KlEAneDMI)
